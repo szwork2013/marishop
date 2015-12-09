@@ -1,0 +1,77 @@
+<!-- (*) assigned classes -->
+
+<ion-view view-title="Idea Feed">
+	<ion-nav-buttons side="right">
+        <button class="button button-icon icon ion-ios-plus-empty" ng-click="infoApp()"></button>
+    </ion-nav-buttons>
+	<ion-content class="background">
+
+
+
+		<div class="list card">
+			<div class="item  item-icon-right">
+				<h2>{{content._creator.name}}</h2>
+				<p class="social">
+			    	<a>
+			    		<i class="icon ion-ios-heart-outline"></i>
+			      		{{content.like}}
+			    	</a>
+			      	<a>
+			      		<i class="icon ion-ios-chatbubble-outline"></i>
+					      {{content.comment}}
+	    			</a>
+			    </p>
+				<p class="icon-p">
+					<i class="icon ion-ios-clock-outline"></i>
+					{{content.date|date}}
+				</p>
+			</div>
+			<div class="item item-body" ng-style="{'background-image':'url(img/bg/{{content.bg!=null?content.bg:1}}.jpg)'}"
+			     style=" background-size: cover; background-position: 50% 50%;">
+				<div class="card-detail-dark">
+				</div>
+				<p style="color: white;" ng-bind-html="content.body | formatText"></p>
+				<p style="color: white;" ng-bind-html="content.detail | formatText"></p>
+				<span class="tag" style="color:white;" ng-repeat="tag in content.tags">
+						{{tag}}
+				</span>
+			</div>
+
+			<div ng-if="content.images.length>0" ng-repeat="image in content.images" class="item item-image">
+				<img ng-src="{{cdn_url+image}}">
+
+			</div>
+			<div class="bar bar-header item-input-inset" style="background-color: white;">
+
+				<button class="button button-outline button-light" style="margin-right: 10px;border: 1px solid #F45D4C;background-color:white;color:#F45D4C" ng-click="like()">
+					<i ng-if="content.ilike" class="icon ion-ios-heart"></i>
+					<i ng-if="!content.ilike" class="icon ion-ios-heart-outline"></i>
+				</button>
+				<label class="item-input-wrapper white-bg" style="border: 1px solid #F45D4C;">
+
+					<input type="search" placeholder="댓글달기" ng-model="reply.comment" ng-enter="createReply()" class="ng-pristine ng-untouched ng-valid">
+
+				</label>
+				<button style="border: 1px solid #F45D4C;color:#F45D4C" class="button button-outline button-light" ng-click="goHome()">
+					등록
+				</button>
+			</div>
+
+			<ion-list >
+				<ion-item  class="reply" ng-repeat="reply in replies track by $index">
+					<h2 style="display: inline-block;font-size: 13px;">{{reply._creator.name}} </h2>
+
+
+					<p class="description" style="font-size:13px;" read-more ng-model="reply.comment" words="false" length="45"></p>
+					<!-- *class icon-view / show icon check -->
+
+					<span style="font-size: 11px;"><i class="icon ion-ios-clock-outline"></i>  {{reply.date|timeAgo}}</span>
+
+				</ion-item>
+			</ion-list>
+			<ion-infinite-scroll ng-if="!noMoreItemsAvailable" on-infinite="loadMore()" distance="10%">
+			</ion-infinite-scroll>
+
+		</div>
+	</ion-content>
+</ion-view>

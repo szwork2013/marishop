@@ -1,0 +1,16 @@
+{
+  "name": "HelloIonic",
+  "private": "true",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.1.1"
+  },
+  "dependencies" : {
+    "angular-cookies": ">=1.2.*",
+    "angular-resource": ">=1.2.*",
+    "angular-socket-io": "~0.6.0",
+    "lodash": "~2.4.1",
+    "angularjs-toaster":"~0.4.16",
+    "ng-file-upload":"~10.0.2",
+    "angular-timeago":"~0.2.4"
+  }
+}

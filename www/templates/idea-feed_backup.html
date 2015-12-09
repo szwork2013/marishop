@@ -1,0 +1,129 @@
+<!-- (*) assigned classes -->
+
+<ion-view view-title="Idea Feed">
+	<ion-nav-buttons side="right">
+        <button class="button button-icon icon ion-ios-plus-empty" ng-click="openCreateIdeaModal()"></button>
+    </ion-nav-buttons>
+	<ion-content>
+		<toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-center'}"></toaster-container>
+	<div ng-repeat="content in contents">
+		<div class="list card" style="box-shadow: 0 0 1px 1px rgba(255, 0, 0, 0.69);">
+			<div class="item item-avatar item-icon-right">
+				<img ng-if="content._creator.user_picture" ng-src="{{cdn_url+content._creator.user_picture}}">
+				<img ng-if="!content._creator.user_picture" ng-src="{{cdn_url+'assets/images/yeoman.png'}}">
+				<h2>{{content._creator.name}}</h2>
+				<p class="social">
+			    	<a>
+			    		<i class="icon ion-ios-heart-outline"></i>
+			      		{{content.like}}
+			    	</a>
+			      	<a>
+			      		<i class="icon ion-ios-chatbubble-outline"></i>
+					      {{content.comment}}
+	    			</a>
+			    </p>
+				<p class="icon-p">
+					<i class="icon ion-ios-clock-outline"></i>
+					{{content.date| date}}
+				</p>
+			</div>
+
+			<div class="item item-body">
+
+				<p class="description" read-more ng-model="content.body" words="false" length="100"></p>
+				<div ng-repeat="tag in content.tags">
+					#{{tag}}
+				</div>
+			</div>
+
+			<div ng-if="content.images.length>0" ng-repeat="image in content.images | limitTo:limitQty" class="item item-image">
+				<img ng-src="{{cdn_url+image}}">
+				<p class="social-img-down">
+					<a  href="#/app/idea-feed/{{content._id}}">
+						<i class="icon ion-plus-round"></i>
+						{{content.images.length-limitQty}}
+					</a>
+				</p>
+			</div>
+			<!-- *class red-bg / background color tabs -->
+			<div class="item tabs tabs-secondary tabs-icon-left red-bg">
+			    <a class="tab-item"  ng-click="like(content)">
+				    <i ng-if="content.ilike" class="icon ion-ios-heart"></i>
+				    <i ng-if="!content.ilike" class="icon ion-ios-heart-outline"></i>
+			    	Like
+			    </a>
+			    <a class="tab-item" href="#/app/idea-feed/{{content.id}}">
+			    	<i class="icon ion-ios-chatbubble"></i>
+			    	Comment
+			    </a>
+			    <a class="tab-item">
+			    	<i class="icon ion-ios-redo"></i>
+			    	Share
+			    </a>
+		  	</div>
+		</div>
+	</div>
+		<ion-infinite-scroll ng-if="!noMoreItemsAvailable" on-infinite="loadMore()" distance="10%">
+		</ion-infinite-scroll>
+
+		<script id="create-idea.html" type="text/ng-template">
+			<div class="modal">
+
+				<div class="bar bar-header bar-assertive" style="background-color: #ff6263;">
+					<div class="buttons buttons-left header-item">
+						<span class="left-buttons">
+                <button class="button button-icon button-clear ion-ios-close-empty"  ng-click="closeCreateIdeaModal()" menu-toggle="left"></button>
+            </span>
+					</div>
+					<div class="title title-center header-item" >Create Idea</div>
+
+					<div class="buttons buttons-right">
+						<span class="right-buttons">
+			        <button class="button button-icon icon ion-ios-checkmark-empty" ng-click="createIdea()"></button>
+			      </span>
+					</div>
+
+				</div>
+				<ion-content  style="top:35px;" class="center">
+					<div class="list">
+
+						<div class="media-area media-area-small">
+							<div class="row">
+								<div class="col">
+									<div class="textareaContainer">
+										<textarea name="text" rows="6" style="width:100%" placeholder="Any Idea?" ng-model="idea.body"></textarea>
+									</div>
+									<tags-input ng-model="idea.tags"></tags-input>
+								</div>
+							</div>
+
+							<div ng-show="!device" class="row">
+								<div class="col">
+									<input type="file" ngf-select="imagePreview($files)">
+								</div>
+							</div>
+							<div ng-show="device" class="row">
+								<div class="col">
+									<button class="button  button-assertive" style="width: 100%;" ng-click="getMultiPhoto()"><i class="ion-images"></i> Album</button>
+
+								</div>
+								<div class="col">
+									<button class="button button-outline button-assertive" style="width: 100%;" ng-click="takePhoto()"><i class="ion-camera"></i> Camera</button>
+								</div>
+							</div>
+							<div class="row" >
+								<div class="col" ng-repeat="img in idea.images">
+									<img ng-src="{{img}}" width="100%"/>
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+
+				</ion-content>
+			</div>
+		</script>
+	</ion-content>
+
+</ion-view>

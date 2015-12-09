@@ -1,0 +1,75 @@
+<!-- (*) assigned classes -->
+
+<ion-view view-title="Idea Feed">
+	<ion-nav-buttons side="right">
+        <button class="button button-icon icon ion-ios-plus-empty" ng-click="infoApp()"></button>
+    </ion-nav-buttons>
+	<ion-content>
+		<!--id : '1',-->
+		<!--user : {user_name:'esko', user_email:'ko.es@gsshop.com', user_picture:'/img/82.jpg'},-->
+		<!--body : '요즘 Agile로 일해라, Agile을 도입해라. 여러가지 이야기가 많이 나오고 있는데.. 전 Agile이 뭔지 잘 모르겠거든요.. 개발 방법론인건지, 기업 문화인건지.. 저랑 비슷한 생각을 갖고 계신분도 많은것 같은데, ' +-->
+		<!--'우리 회사가 추구하느 ㄴ에쟈일이란 무엇일까요? 또는 사내에 에쟈일 전문가가 있나요? 누구 속시원하게 정리해주실 분 안계신가요?',-->
+		<!--like : 4,-->
+		<!--comment : 3,-->
+		<!--date: '2015.11.23',-->
+	<div >
+		<div class="list card">
+			<div class="item item-avatar item-icon-right">
+				<img ng-if="content._creator.user_picture" ng-src="{{cdn_url+content._creator.user_picture}}">
+				<img ng-if="!content._creator.user_picture" ng-src="{{cdn_url+'assets/images/yeoman.png'}}">
+				<h2>{{content._creator.name}}</h2>
+				<p class="social">
+			    	<a>
+			    		<i class="icon ion-ios-heart-outline"></i>
+			      		{{content.like}}
+			    	</a>
+			      	<a>
+			      		<i class="icon ion-ios-chatbubble-outline"></i>
+					      {{content.comment}}
+	    			</a>
+			    </p>
+				<p class="icon-p">
+					<i class="icon ion-ios-clock-outline"></i>
+					{{content.date|date}}
+				</p>
+			</div>
+			<div class="item item-body">
+
+				<p>{{content.body}}</p>
+			</div>
+
+			<div ng-if="content.images.length>0" ng-repeat="image in content.images" class="item item-image">
+				<img ng-src="{{cdn_url+image}}">
+
+			</div>
+			<div class="bar bar-header item-input-inset" style="background-color: white;">
+
+				<button class="button button-outline button-light" style="margin-right: 10px;border: 1px solid #F45D4C;background-color:white;color:#F45D4C" ng-click="like()">
+					<i ng-if="content.ilike" class="icon ion-ios-heart"></i>
+					<i ng-if="!content.ilike" class="icon ion-ios-heart-outline"></i>
+				</button>
+				<label class="item-input-wrapper white-bg" style="border: 1px solid #F45D4C;">
+
+					<input type="search" placeholder="댓글달기" ng-focus="goSearch();" ng-blur="hideCancelBtn();" ng-model="search.query" ng-enter="searchEnter()" class="ng-pristine ng-untouched ng-valid">
+
+				</label>
+				<button style="border: 1px solid #F45D4C;color:#F45D4C" class="button button-outline button-light" ng-click="goHome()">
+					등록
+				</button>
+			</div>
+			<ion-list ng-repeat="reply in replies track by $index">
+				<ion-item class="item-avatar">
+					<img ng-src="{{reply.user_image}}">
+					<h2>{{reply.name}}</h2>
+					<p class="description" read-more ng-model="reply.content" words="false" length="45"></p>
+					<!-- *class icon-view / show icon check -->
+
+				</ion-item>
+			</ion-list>
+			<ion-infinite-scroll ng-if="!noMoreItemsAvailable" on-infinite="loadMore()" distance="10%">
+			</ion-infinite-scroll>
+
+		</div>
+	</div>
+	</ion-content>
+</ion-view>

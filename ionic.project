@@ -1,0 +1,15 @@
+{
+  "name": "marishop",
+  "app_id": "",
+  "proxies": [
+      {
+        "path": "/auth",
+
+        "proxyUrl": "http://marishopserver-gsopenlab.rhcloud.com/auth"
+      },
+      {
+        "path": "/api",
+        "proxyUrl": "http://marishopserver-gsopenlab.rhcloud.com/api"
+      }
+    ]
+}

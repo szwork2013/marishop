@@ -1,0 +1,31 @@
+<ion-view class="view-login">
+	  <ion-content>
+		  <!-- *class logo / logo company or app -->
+		  <div class="logo">
+			  <img ng-src="img/marishop_logo.png" alt="Company">
+		  </div>
+		  <!-- form login with button sing in and facebook login style -->
+
+
+
+		  <form class="form" name="form" ng-submit="login(form)" novalidate>
+			  <div class="list list-inset">
+				  <label class="item item-input">
+
+					  <input type="email" name="email" class="form-control" ng-model="user.email"  placeholder="Email" required>
+
+				  </label>
+				  <label class="item item-input">
+					  <input type="password" name="password" class="form-control" ng-model="user.password"  placeholder="Password" required>
+
+				  </label>
+
+				  <button type="submit" class="button button-block button-assertive">
+					  LOG IN
+				  </button>
+
+				  <a href="#/signup">Create Acount</a>
+			  </div>
+		  </form>
+	  </ion-content>
+  </ion-view>
