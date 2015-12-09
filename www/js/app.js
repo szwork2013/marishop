@@ -173,7 +173,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
       if(response.status === 401) {
         $location.path('/login');
         // remove any stale tokens
-        $cookie.remove('token');
+        $cookies.remove('token');
         return $q.reject(response);
       }
       else {
