@@ -1,8 +1,12 @@
 angular.module('starter.controllers', [])
-.controller('LoginCtrl', function($rootScope,$scope, Auth, $location, ApiEndpoint) {
+.controller('LoginCtrl', function($rootScope,$state, $scope, Auth, $location, ApiEndpoint) {
   $scope.user = {};
   $scope.errors = {};
 
+  if(Auth.getCurrentUser()._id!=null){
+    $state.go('app.idea');
+
+  }
 
   $scope.login = function(form) {
     $scope.submitted = true;

@@ -190,8 +190,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
 .constant('ApiEndpoint', {
   //auth_url: 'http://localhost:8100/auth'
   //,api_url: 'http://localhost:8100/api'
-  //auth_url: 'http://marishopserver-gsopenlab.rhcloud.com/auth'
-  //,api_url: 'http://marishopserver-gsopenlab.rhcloud.com/api'
   auth_url: 'http://54.249.20.38:8100/auth'
   ,api_url: 'http://54.249.20.38:8100/api'
   ,cdn_url: 'http://marishopserver-gsopenlab.rhcloud.com:8000'
