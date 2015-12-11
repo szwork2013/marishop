@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('starter')
-  .factory('socket', function(socketFactory,ApiEndpoint,$rootScope) {
+  .factory('socket', function(socketFactory,ApiEndpoint,$rootScope,Auth) {
 
     // socket.io now auto-configures its connection when we ommit a connection url
     var ioSocket = io(ApiEndpoint.cdn_url, {
@@ -46,6 +46,9 @@ angular.module('starter')
             array.splice(index, 1, item);
             event = 'updated';
           } else {
+            if(item._creator._id==Auth.getCurrentUser()._id) {
+              item.mine = true;
+            }
             array.unshift(item);
           }
 
@@ -70,10 +73,11 @@ angular.module('starter')
       unsyncUpdates: function (modelName) {
         socket.removeAllListeners(modelName + ':save');
         socket.removeAllListeners(modelName + ':remove');
+        socket.removeAllListeners(modelName + ':like');
       }
 
 
-      ,setIdeaDetailSocket : function(_idea, array,content, cb){
+      ,setIdeaDetailSocket : function(_idea, array,content, cb, removeCb){
         cb = cb || angular.noop;
 
         var beforeSocket =$rootScope.currentSocket;
@@ -92,7 +96,7 @@ angular.module('starter')
             content.comment -=1;
             event = 'updated';
           } else {
-            array.unshift(item);
+            array.push(item);
             content.comment +=1;
           }
 
@@ -102,7 +106,9 @@ angular.module('starter')
           cb(data);
         });
 
-
+        socket.on("idea:remove",function(data){
+          removeCb(data);
+        })
 
       }
       ,emitCommentCreate : function(info){
@@ -111,7 +117,9 @@ angular.module('starter')
       ,emitLike : function(_liker){
         socket.emit("idea:like",_liker);
       }
-
+      ,emitRemove : function(_idea){
+        socket.emit("idea:remove",_idea);
+      }
       //,setLikeEvent : function(modelName, cb){
       //
       //

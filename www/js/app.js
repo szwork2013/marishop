@@ -8,7 +8,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
               , 'angular-jwt','ionic.contrib.ui.tinderCards', 'readMore','ngCordova','ngTagsInput','btford.socket-io','toaster','ngAnimate'
               ,'yaru22.angular-timeago'])
 
-.run(function($ionicPlatform, $rootScope, $location, ApiEndpoint) {
+.run(function($ionicPlatform, $rootScope, $location, ApiEndpoint,toaster) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -26,6 +26,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
     if( window.device ) {
       $rootScope.device = true;
     }
+    $rootScope.toasterPop = function(param){
+      toaster.pop(param);
+    }
+
   });
 
 })
@@ -125,7 +129,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
     views: {
       'menuContent': {
         templateUrl: "templates/idea-feed.html",
-        controller: 'IdeaCtrl'
+        controller: 'IdeaCtrl',
+        params: ['remove']
       }
     },
     authenticate: true
@@ -162,8 +167,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
     // Add authorization token to headers
     request: function (config) {
       config.headers = config.headers || {};
-      if ($cookies.token) {
-        config.headers.Authorization = 'Bearer ' + $cookies.token;
+      if ($cookies.get("token")) {
+        config.headers.Authorization = 'Bearer ' + $cookies.get("token");
       }
       return config;
     },
@@ -183,6 +188,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
   };
 })
 .constant('ApiEndpoint', {
+  //auth_url: 'http://localhost:8100/auth'
+  //,api_url: 'http://localhost:8100/api'
   //auth_url: 'http://marishopserver-gsopenlab.rhcloud.com/auth'
   //,api_url: 'http://marishopserver-gsopenlab.rhcloud.com/api'
   auth_url: 'http://54.249.20.38:8100/auth'
@@ -217,4 +224,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
 
     return output;
   };
-});
+})
+.directive('sibs', function() {
+  return {
+    link: function(scope, element, attrs) {
+      element.bind('click', function() {
+        if(element.hasClass('clicked')){
+          element.parent().children().removeClass('card-show');
+          element.parent().children().addClass('card-hide');
+          element.removeClass('clicked');
+        }else{
+          element.parent().children().removeClass('card-hide');
+          element.parent().children().addClass('card-show');
+          element.addClass('clicked');
+        }
+
+      })
+    },
+  }
+});;

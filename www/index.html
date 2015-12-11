@@ -3,7 +3,21 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-	  <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://marishopserver-gsopenlab.rhcloud.com http://marishopserver-gsopenlab.rhcloud.com:8000 ws://marishopserver-gsopenlab.rhcloud.com:8000 ws://localhost:35729 ws://54.249.20.38:35729 ; style-src 'self' 'unsafe-inline'; media-src *;script-src 'self' http://marishopserver-gsopenlab.rhcloud.com http://localhost:35729 'unsafe-eval' 'unsafe-inline';">
+	  <meta http-equiv="Content-Security-Policy"
+	        content="default-src 'self'
+	                                    http://marishopserver-gsopenlab.rhcloud.com:8000
+	                                    http://marishopserver-gsopenlab.rhcloud.com
+	                                    ws://marishopserver-gsopenlab.rhcloud.com:8000
+	                                    ws://localhost:35729 ws://54.249.20.38:35729;
+
+	                 img-src self * data:;
+	                 style-src 'self' 'unsafe-inline';
+	                 media-src *;
+	                 script-src 'self'
+	                                    http://marishopserver-gsopenlab.rhcloud.com
+	                                    http://localhost:35729
+	                                    http://54.249.20.38
+	                                    http://marishopserver-gsopenlab.rhcloud.com:8000 'unsafe-eval' 'unsafe-inline';">
 
 	  <title></title>
 
@@ -25,6 +39,7 @@
 	  <script src="lib/ngCordova/dist/ng-cordova.js"></script>
 	  <script src="cordova.js"></script>
 	  <script src="http://marishopserver-gsopenlab.rhcloud.com/app/88308d47.vendor.js"></script>
+	  <!--<script src="http://marishopserver-gsopenlab.rhcloud.com:8000/socket.io-client/socket.io.js"></script>-->
 
     <!-- your app's js -->
     <script src="js/app.js"></script>

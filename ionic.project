@@ -4,12 +4,11 @@
   "proxies": [
       {
         "path": "/auth",
-
-        "proxyUrl": "http://marishopserver-gsopenlab.rhcloud.com/auth"
+        "proxyUrl": "http://marishopserver-gsopenlab.rhcloud.com:8000/auth"
       },
       {
         "path": "/api",
-        "proxyUrl": "http://marishopserver-gsopenlab.rhcloud.com/api"
+        "proxyUrl": "http://marishopserver-gsopenlab.rhcloud.com:8000/api"
       }
     ]
 }

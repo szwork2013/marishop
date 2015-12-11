@@ -93,6 +93,7 @@ button.toast-close-button {
 }
 .toast-center {
   top: 45%;
+  right:0px;
 }
 #toast-container {
   position: fixed;
@@ -172,7 +173,7 @@ button.toast-close-button {
   background-color: #030303;
 }
 .toast-success {
-  background-color: #51a351;
+  background-color: #FF6263;;
 }
 .toast-error {
   background-color: #bd362f;
@@ -200,7 +201,7 @@ button.toast-close-button {
 @media all and (min-width: 241px) and (max-width: 480px) {
   #toast-container  > div {
     padding: 8px 8px 8px 50px;
-    width: 18em;
+    width: 15em;
   }
   #toast-container .toast-close-button {
     right: -0.2em;

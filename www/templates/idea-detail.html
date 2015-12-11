@@ -6,30 +6,51 @@
     </ion-nav-buttons>
 	<ion-content class="background">
 
+		<div ng-if="removed" class="list card">
+			<div class="item" style="z-index:999999;">
+				<button ng-click="goFeed();" class="button button-full" style="border: 1px solid #F45D4C;background-color:white;color:#F45D4C">
+					<i class="icon ion-arrow-return-right"></i> Idea feed로 돌아가기
+				</button>
+			</div>
+		</div>
 
+		<div ng-if="!removed&&content" class="list card">
+			<div class="item  item-icon-right" style="z-index:999999;">
+				<h2 style="display: inline-block;">{{content._creator.name}}</h2>
 
-		<div class="list card">
-			<div class="item  item-icon-right">
-				<h2>{{content._creator.name}}</h2>
-				<p class="social">
-			    	<a>
-			    		<i class="icon ion-ios-heart-outline"></i>
-			      		{{content.like}}
-			    	</a>
-			      	<a>
-			      		<i class="icon ion-ios-chatbubble-outline"></i>
-					      {{content.comment}}
-	    			</a>
-			    </p>
+				<div class="social">
+					<a sibs class="pull-right btn-hover" style="margin-right:19px;color:#FF6263;">
+						<i  style="font-size: 14px;" class="icon ion-chevron-down"></i>
+					</a>
+					<ul class="card-drop-down-red card-hide" >
+						<li ng-if="content.mine"><a ng-click="removeIdea(content._id);"><i class="icon ion-trash-a"></i> Idea 삭제 </a></li>
+						<li><a href="#"><i class="icon ion-pin"></i> Pin it</a></li>
+					</ul>
+				</div>
+
 				<p class="icon-p">
 					<i class="icon ion-ios-clock-outline"></i>
 					{{content.date|date}}
 				</p>
 			</div>
-			<div class="item item-body" ng-style="{'background-image':'url(img/bg/{{content.bg!=null?content.bg:1}}.jpg)'}"
-			     style=" background-size: cover; background-position: 50% 50%;">
+			<!--<div class="item item-body" ng-style="{'background-image':'url(img/bg/{{content.bg!=''?content.bg:1}}.jpg)'}"-->
+			     <!--style=" background-size: cover; background-position: 50% 50%;">-->
+				<div class="item item-body" style="background-image: url(img/bg/{{content.bg!=null?content.bg:1}}.jpg); background-size: cover; background-position: 50% 50%;">
+
 				<div class="card-detail-dark">
 				</div>
+					<p style="position: absolute;
+                    right: 11px;
+                    top:-5px;">
+						<a style="color: #FF6263;font-size:15px;">
+							<i class="icon ion-ios-heart"></i>
+							{{content.like}}
+						</a>
+						<a style="color: #FF6263;font-size:15px;">
+							<i class="icon ion-ios-chatbubble"></i>
+							{{content.comment}}
+						</a>
+					</p>
 				<p style="color: white;" ng-bind-html="content.body | formatText"></p>
 				<p style="color: white;" ng-bind-html="content.detail | formatText"></p>
 				<span class="tag" style="color:white;" ng-repeat="tag in content.tags">
@@ -52,7 +73,7 @@
 					<input type="search" placeholder="댓글달기" ng-model="reply.comment" ng-enter="createReply()" class="ng-pristine ng-untouched ng-valid">
 
 				</label>
-				<button style="border: 1px solid #F45D4C;color:#F45D4C" class="button button-outline button-light" ng-click="goHome()">
+				<button style="border: 1px solid #F45D4C;color:#F45D4C" class="button button-outline button-light" ng-click="createReply()">
 					등록
 				</button>
 			</div>
@@ -74,4 +95,5 @@
 
 		</div>
 	</ion-content>
+	<toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-center'}"></toaster-container>
 </ion-view>

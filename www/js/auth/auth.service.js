@@ -3,7 +3,8 @@
 angular.module('starter.services')
   .factory('Auth', function Auth($location, $rootScope, $http, User, $cookies, $q,ApiEndpoint) {
     var currentUser = {};
-    if($cookies.token) {
+    console.log($cookies.getAll());
+    if($cookies.get("token")) {
       currentUser = User.get();
     }
 
@@ -27,9 +28,10 @@ angular.module('starter.services')
         }).
         success(function(data) {
           console.log(data);
-          $cookies.token= data.token;
+          $cookies.put("token", data.token);
+
           currentUser = User.get();
-          console.log($cookies.token);
+          console.log($cookies.get("token"));
           deferred.resolve(data);
           return cb();
         }).
@@ -65,7 +67,7 @@ angular.module('starter.services')
 
         return User.save(user,
           function(data) {
-            $cookies.token= data.token;
+            $cookies.put("token", data.token);
             currentUser = User.get();
             return cb(user);
           },
@@ -144,7 +146,7 @@ angular.module('starter.services')
        * Get auth token
        */
       getToken: function() {
-        return $cookies.token;
+        return $cookies.get('token');
       }
     };
   });

@@ -5,7 +5,7 @@
         <button class="button button-icon icon ion-ios-plus-empty" ng-click="openCreateIdeaModal()"></button>
     </ion-nav-buttons>
 	<ion-content   class="background">
-		<toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-center'}"></toaster-container>
+
 
 		<div ng-repeat="content in contents">
 			<div class="card card-background" style="box-shadow: none;">
@@ -16,15 +16,23 @@
 				</div>
 				<div class="content">
 					<div class="category" >
-						<p style="font-size:13px;">
+						<p style="font-size:13px;display: inline-block;">
 							<i class="icon ion-ios-clock-outline"></i>
 							{{content.date| date}}
 						</p>
+						<a href="#" sibs class="pull-right btn-hover" style="margin-right:8px;">
+							<i class="icon ion-chevron-down"></i>
+						</a>
+						<ul class="card-drop-down card-hide" >
+							<li ng-if="content.mine"><a ng-click="removeIdea(content._id);"><i class="icon ion-trash-a"></i> Idea 삭제 </a></li>
+							<li><a href="#"><i class="icon ion-pin"></i> Pin it</a></li>
+						</ul>
 					</div>
 
 					<a href="#/app/idea-feed/{{content._id}}">
 						<p  class="title ng-binding" ng-bind-html="content.body | formatText"></p>
 					</a>
+
 				</div>
 
 				<div class="footer">
@@ -42,7 +50,7 @@
 						</a>
 					</div>
 					<div class="stats">
-						<a href="#/app/idea-feed/{{content.id}}" class="ng-binding">
+						<a href="#/app/idea-feed/{{content._id}}" class="ng-binding">
 							<i class="icon ion-chatbubble"></i> {{content.comment!=null?content.comment:0}}
 						</a>
 					</div>
@@ -136,6 +144,7 @@
 			</div>
 		</script>
 	</ion-content>
+	<toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-center'}"></toaster-container>
 	<div class="fixed-outside">
 		<div class="row">
 			<div class="col">

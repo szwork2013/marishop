@@ -23,10 +23,10 @@ angular.module('starter.services', [])
       var cb = callback || angular.noop;
       var deferred = $q.defer();
 
-      var page = pagination.page;
-      var countPerPage = pagination.countPerPage;
+      var last_id = pagination.last_id;
+      var limit = pagination.limit;
 
-      $http.get(ApiEndpoint.api_url+"/ideas")
+      $http.get(ApiEndpoint.api_url+"/ideas",{params:{last_id:last_id,limit:limit}})
       .success(function(data){
         deferred.resolve(data);
         return cb();

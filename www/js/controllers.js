@@ -203,34 +203,64 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('IdeaCtrl',function($rootScope, $scope, $ionicPopup,$ionicModal,$cordovaCamera,$cordovaImagePicker,$http,Upload , Ideas, Auth, socket,toaster,ApiEndpoint){
+.controller('IdeaCtrl',function($rootScope, $scope, $stateParams,$ionicPopup,$ionicModal,$cordovaCamera,$cordovaImagePicker,$http,Upload , Ideas, Auth, socket,toaster,ApiEndpoint){
 
-  $scope.countPerPage = 2;
-  $scope.page = 0;
+  $scope.limit = 5;
+  $scope.last_id = '';
   $scope.noMoreItemsAvailable = false;
 
   $scope.totalCount = 0;
 
   $scope.bgs = ["1","2","3","4","5","6","7","8","9","10","11","12"];
 
-  Ideas.getPageList({
-    page: $scope.page,
-    countPerPage: $scope.countPerPage
-  })
-  .then( function(data) {
-    // Logged in, redirect to home
-    console.log(data);
-    $scope.contents = data;
+  $scope.contents =[];
+
+  console.log($stateParams.remove);
+
+  var getPageList = function(cb){
+    Ideas.getPageList({
+      last_id: $scope.last_id,
+      limit: $scope.limit
+    })
+    .then( function(data) {
+      // Logged in, redirect to home
+      console.log(data);
+      //angular.extend($scope.contents,data);
+
+      for(var i in data){
+        if(data[i]._creator._id==Auth.getCurrentUser()._id){
+          data[i].mine = true;
+        }else{
+          data[i].mine = false;
+
+        }
+        data[i].liker.forEach(function(val) {
+
+          if (val == Auth.getCurrentUser()._id) {
+            data[i].ilike = true;
+          }
+        })
+
+        $scope.contents.push(data[i]);
+      }
+
+      if(data.length<$scope.limit-1){
+        $scope.noMoreItemsAvailable = true;
+      }else{
+        $scope.last_id = data[data.length-1]._id;
+      }
+
+
+      cb();
+    })
+    .catch( function(err) {
+      $scope.errors.other = err.message;
+    });
+  };
+
+  getPageList(function(){
     socket.syncUpdates('idea', $scope.contents);
-  })
-  .catch( function(err) {
-    $scope.errors.other = err.message;
   });
-
-
-
-  //$scope.contents = Ideas.getPageList($scope.page,$scope.countPerPage );
-  $scope.limitQty = 1;
 
   $scope.idea = {body:"",images:[],tags:[],bg:""};
 
@@ -245,6 +275,7 @@ angular.module('starter.controllers', [])
   }
 
   $scope.like = function(content){
+    socket.emitLike({_liker:Auth.getCurrentUser()._id,_idea:content._id});
 
     if(content.ilike){
       content.ilike = false;
@@ -257,15 +288,10 @@ angular.module('starter.controllers', [])
 
   $scope.loadMore = function() {
     console.log('loadMore');
-    var item = getNextPage();
-    console.log(item);
-    for(var i in item){
-      $scope.contents.push(item[i]);
-    }
 
-    $scope.$broadcast('scroll.infiniteScrollComplete');
-
-
+    getPageList(function(){
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    });
   };
 
   var getNextPage = function(){
@@ -291,7 +317,13 @@ angular.module('starter.controllers', [])
   });
 
   $scope.openCreateIdeaModal = function(title) {
-    console.log(title);
+    //toaster.pop({
+    //  type: 'success',
+    //  title: 'OK',
+    //  body: 'Idea가 저장되었습니다.',
+    //  timeout:50000000,
+    //  showCloseButton: true
+    //});
     $scope.replyTitle = title;
     $scope.addIdeaModal.show();
   };
@@ -461,14 +493,30 @@ angular.module('starter.controllers', [])
         return;
       }
       $http.post(ApiEndpoint.api_url+"/ideas",$scope.idea);
-      toaster.pop('success', "title", "text");
+      toaster.pop({
+        type: 'success',
+        title: 'OK',
+        body: 'Idea가 저장되었습니다.',
+        timeout:5000,
+        showCloseButton: true
+      });
       $scope.closeCreateIdeaModal();
       $scope.idea = {body:"",images:[],tags:[]};
     }else{
       createIdeaWithFile();
     }
+  }
 
+  $scope.removeIdea = function(_id){
+    $http.delete(ApiEndpoint.api_url+"/ideas/"+_id);
 
+    toaster.pop({
+      type: 'success',
+      title: 'OK',
+      body: 'Idea가 삭제되었습니다.',
+      timeout:5000,
+      showCloseButton: true
+    });
   }
 
   var createIdeaWithFile = function(){
@@ -518,21 +566,37 @@ angular.module('starter.controllers', [])
     });
 
   }
+
+  $scope.$on('$destroy', function () {
+    socket.unsyncUpdates('idea');
+  });
 })
 
 
-.controller('IdeaDetailCtrl',function($scope, $ionicPopup,$stateParams,$http, Ideas,Replies, Auth, socket,ApiEndpoint){
+.controller('IdeaDetailCtrl',function($rootScope,$scope, $state, $ionicPopup,$stateParams,$http, Ideas,Replies, Auth, socket,ApiEndpoint,toaster){
   //$scope.content = Ideas.getOne($stateParams.ideaId);
 
   console.log(Auth.getCurrentUser()._id);
   $scope.noMoreItemsAvailable = true;
   $scope.content = {};
+  $scope.removed = false;
+  $scope.mine = false;
   Ideas.getOne({
-    id: $stateParams.ideaId,
+    id: $stateParams.ideaId
   })
   .then( function(data) {
     // Logged in, redirect to home
+
+
+    if(data._creator._id==Auth.getCurrentUser()._id){
+      data.mine = true;
+      $scope.mine = true;
+    }else{
+      data.mine = false;
+
+    }
     $scope.content = data;
+
 
     data.liker.forEach(function(val) {
 
@@ -542,8 +606,34 @@ angular.module('starter.controllers', [])
     })
   })
   .catch( function(err) {
-    $scope.errors.other = err.message;
+    $scope.removed = true;
+    //$scope.errors.other = err.message;
   });
+  $scope.goFeed = function(){
+    $state.go("app.idea");
+  }
+  $scope.removeIdea = function(_id){
+    socket.emitRemove(_id);
+
+    $http.delete(ApiEndpoint.api_url+"/ideas/"+_id)
+    .success(function(data){
+      toaster.pop({
+        type: 'success',
+        title: 'OK',
+        body: 'Idea가 삭제되었습니다.',
+        timeout:5000,
+        showCloseButton: true
+      });
+
+      $scope.content={};
+      $scope.removed = true;
+
+      socket.emitRemove(_id);
+    })
+    .error(function(err){
+      console.log(err);
+    });
+  }
 
   $scope.reply = {_idea:$stateParams.ideaId
                   ,_creator:Auth.getCurrentUser()._id};
@@ -563,6 +653,19 @@ angular.module('starter.controllers', [])
 
       }else if(!data.plus&&(Auth.getCurrentUser()._id==data.liker)){
         $scope.content.ilike = false;
+      }
+    },
+    function(data){
+      if(!$scope.mine && $scope.content._id==data._idea){
+        $scope.content={};
+        $scope.removed = true;
+        //toaster.pop({
+        //  type: 'success',
+        //  title: 'OK',
+        //  body: '삭제된 Idea입니다.',
+        //  timeout:5000,
+        //  showCloseButton: true
+        //});
       }
     });
 
@@ -603,6 +706,10 @@ angular.module('starter.controllers', [])
       console.log(err);
     });
   }
+  $scope.$on('$destroy', function () {
+    socket.unsyncUpdates('idea');
+    socket.unsyncUpdates('reply');
+  });
 
 })
 ;
