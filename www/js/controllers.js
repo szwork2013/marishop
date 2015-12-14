@@ -218,7 +218,7 @@ angular.module('starter.controllers', [])
   $scope.bgs = ["1","2","3","4","5","6","7","8","9","10","11","12"];
 
   $scope.contents =[];
-
+  socket.syncUpdates('idea', $scope.contents);
 
   var getPageList = function(cb){
     Ideas.getPageList({
@@ -253,9 +253,6 @@ angular.module('starter.controllers', [])
         $scope.contents.push(data[i]);
       }
 
-
-
-
       cb();
     })
     .catch( function(err) {
@@ -263,9 +260,10 @@ angular.module('starter.controllers', [])
     });
   };
 
-  getPageList(function(){
-    socket.syncUpdates('idea', $scope.contents);
-  });
+
+  //getPageList(function(){
+  //  socket.syncUpdates('idea', $scope.contents);
+  //});
 
   $scope.idea = {body:"",images:[],tags:[],bg:""};
 
@@ -293,19 +291,12 @@ angular.module('starter.controllers', [])
 
   $scope.loadMore = function() {
     console.log('loadMore');
-    if($scope.contents.length>1&&$scope.last_id==""){
-      setTimeout(function(){
-        getPageList(function(){
-          $scope.$broadcast('scroll.infiniteScrollComplete');
-        });
-      },1000)
-    }else{
-      getPageList(function(){
-        $scope.$broadcast('scroll.infiniteScrollComplete');
-      });
-    }
 
 
+    getPageList(function(){
+      socket.syncUpdates('idea', $scope.contents);
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    });
 
   };
 
