@@ -219,7 +219,6 @@ angular.module('starter.controllers', [])
 
   $scope.contents =[];
 
-  console.log($stateParams.remove);
 
   var getPageList = function(cb){
     Ideas.getPageList({
@@ -230,6 +229,12 @@ angular.module('starter.controllers', [])
       // Logged in, redirect to home
       console.log(data);
       //angular.extend($scope.contents,data);
+
+      if(data.length<$scope.limit-1){
+        $scope.noMoreItemsAvailable = true;
+      }else{
+        $scope.last_id = data[data.length-1]._id;
+      }
 
       for(var i in data){
         if(data[i]._creator._id==Auth.getCurrentUser()._id){
@@ -248,11 +253,7 @@ angular.module('starter.controllers', [])
         $scope.contents.push(data[i]);
       }
 
-      if(data.length<$scope.limit-1){
-        $scope.noMoreItemsAvailable = true;
-      }else{
-        $scope.last_id = data[data.length-1]._id;
-      }
+
 
 
       cb();
@@ -292,10 +293,20 @@ angular.module('starter.controllers', [])
 
   $scope.loadMore = function() {
     console.log('loadMore');
+    if($scope.contents.length>1&&$scope.last_id==""){
+      setTimeout(function(){
+        getPageList(function(){
+          $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+      },1000)
+    }else{
+      getPageList(function(){
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+      });
+    }
 
-    getPageList(function(){
-      $scope.$broadcast('scroll.infiniteScrollComplete');
-    });
+
+
   };
 
   var getNextPage = function(){

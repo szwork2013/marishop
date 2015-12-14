@@ -6,6 +6,7 @@ angular.module('starter.services')
     console.log($cookies.getAll());
     if($cookies.get("token")) {
       currentUser = User.get();
+
     }
 
     return {
@@ -28,15 +29,47 @@ angular.module('starter.services')
         }).
         success(function(data) {
           console.log(data);
-          $cookies.put("token", data.token);
+          var now = new Date(),
+          // this will set the expiration to 12 months
+          exp = new Date(now.getFullYear()+1, now.getMonth(), now.getDate());
+
+          $cookies.put("token", data.token, {expires:exp});
 
           currentUser = User.get();
-          console.log($cookies.get("token"));
           deferred.resolve(data);
           return cb();
         }).
         error(function(err) {
           console.log(err);
+          this.logout();
+          deferred.reject(err);
+          return cb(err);
+        }.bind(this));
+
+        return deferred.promise;
+      },
+
+      refreshToken: function(user, callback) {
+        var cb = callback || angular.noop;
+        var deferred = $q.defer();
+
+
+        $http.post(ApiEndpoint.auth_url+"/local/refresh", {
+
+        }).
+        success(function(data) {
+          console.log(data);
+          var now = new Date(),
+          // this will set the expiration to 12 months
+          exp = new Date(now.getFullYear()+1, now.getMonth(), now.getDate());
+
+          $cookies.put("token", data.token, {expires:exp});
+
+          currentUser = User.get();
+          deferred.resolve(data);
+          return cb();
+        }).
+        error(function(err) {
           this.logout();
           deferred.reject(err);
           return cb(err);
@@ -67,6 +100,10 @@ angular.module('starter.services')
 
         return User.save(user,
           function(data) {
+            var now = new Date(),
+            // this will set the expiration to 12 months
+            exp = new Date(now.getFullYear()+1, now.getMonth(), now.getDate());
+
             $cookies.put("token", data.token);
             currentUser = User.get();
             return cb(user);

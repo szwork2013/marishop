@@ -176,6 +176,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
     // Intercept 401s and redirect you to login
     responseError: function(response) {
       if(response.status === 401) {
+
         $location.path('/login');
         // remove any stale tokens
         $cookies.remove('token');
@@ -198,6 +199,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
   // Redirect to login if route requires auth and you're not logged in
   $rootScope.$on('$stateChangeStart', function (event, next) {
 
+    Auth.refreshToken({})
+    .then( function() {
+      // Logged in, redirect to home
+      //$location.path('/');
+    })
+    .catch( function(err) {
+    });
+
     Auth.isLoggedInAsync(function(loggedIn) {
 
       if (next.authenticate && !loggedIn) {
@@ -207,6 +216,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
         });
       }
     });
+
+
   });
 })
 .filter('formatText', function (){
