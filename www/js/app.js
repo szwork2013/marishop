@@ -29,6 +29,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
     $rootScope.toasterPop = function(param){
       toaster.pop(param);
     }
+    $rootScope.bgs = ["1","2","3","4","5","6","7","8","9","10","11","12"];
+
 
   });
 
@@ -189,10 +191,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
   };
 })
 .constant('ApiEndpoint', {
-  //auth_url: 'http://localhost:8100/auth'
-  //,api_url: 'http://localhost:8100/api'
-  auth_url: 'http://54.249.20.38:8100/auth'
-  ,api_url: 'http://54.249.20.38:8100/api'
+  auth_url: 'http://localhost:8100/auth'
+  ,api_url: 'http://localhost:8100/api'
+  //auth_url: 'http://54.249.20.38:8100/auth'
+  //,api_url: 'http://54.249.20.38:8100/api'
   ,cdn_url: 'http://marishopserver-gsopenlab.rhcloud.com:8000'
 })
 .run(function ($rootScope, $location, Auth) {

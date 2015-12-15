@@ -548,7 +548,7 @@ textarea { width: 100%; margin: 0; padding: 0; border-width: 0; }
 
 .card-drop-down{
     border-radius: 5px;
-    width: 100px;
+    width: 145px;
     position: absolute;
     top: 30px;
     right:10px;
@@ -556,7 +556,8 @@ textarea { width: 100%; margin: 0; padding: 0; border-width: 0; }
     text-align: left;
 }
 .card-drop-down>li{
-    border-bottom: 1px solid rgba(128, 128, 128, 0.35);;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.35);
+    line-height:30px;
 }
 .card-drop-down>li:last-child{
     border-bottom: none;
@@ -565,7 +566,7 @@ textarea { width: 100%; margin: 0; padding: 0; border-width: 0; }
     color:grey;
     text-shadow:none;
     margin-left: 10px;
-    font-size: 12px;
+    font-size: 14px;
 }
 .card-drop-down:after, .card-drop-down:before {
     bottom: 94%;
@@ -610,7 +611,8 @@ textarea { width: 100%; margin: 0; padding: 0; border-width: 0; }
     text-align: left;
 }
 .card-drop-down-red>li{
-    border-bottom: 1px solid rgba(128, 128, 128, 0.35);;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.35);
+    line-height:30px;
 }
 .card-drop-down-red>li:last-child{
     border-bottom: none;
@@ -619,7 +621,7 @@ textarea { width: 100%; margin: 0; padding: 0; border-width: 0; }
     color:white;
     text-shadow:none;
     margin-left: 10px;
-    font-size: 12px;
+    font-size: 14px;
 }
 .card-drop-down-red:after, .card-drop-down-red:before {
     bottom: 94%;

@@ -58,7 +58,6 @@ angular.module('starter.services')
 
         }).
         success(function(data) {
-          console.log(data);
           var now = new Date(),
           // this will set the expiration to 12 months
           exp = new Date(now.getFullYear()+1, now.getMonth(), now.getDate());

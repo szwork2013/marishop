@@ -215,7 +215,7 @@ angular.module('starter.controllers', [])
 
   $scope.totalCount = 0;
 
-  $scope.bgs = ["1","2","3","4","5","6","7","8","9","10","11","12"];
+
 
   $scope.contents =[];
   socket.syncUpdates('idea', $scope.contents);
@@ -498,15 +498,24 @@ angular.module('starter.controllers', [])
       if($scope.idea === '') {
         return;
       }
-      $http.post(ApiEndpoint.api_url+"/ideas",$scope.idea);
-      toaster.pop({
-        type: 'success',
-        title: 'OK',
-        body: 'Idea가 저장되었습니다.',
-        timeout:5000,
-        showCloseButton: true
+      $http.post(ApiEndpoint.api_url+"/ideas",$scope.idea)
+      .success(function(data){
+        //$scope.idea.images.push("http://localhost:9000"+data.path);
+        toaster.pop({
+          type: 'success',
+          title: 'OK',
+          body: 'Idea가 저장되었습니다.',
+          timeout:5000,
+          showCloseButton: true
+        });
+        $scope.closeCreateIdeaModal();
+
+      })
+      .error(function(err){
+        console.log(err);
       });
-      $scope.closeCreateIdeaModal();
+
+
       $scope.idea = {body:"",images:[],tags:[]};
     }else{
       createIdeaWithFile();
@@ -514,15 +523,23 @@ angular.module('starter.controllers', [])
   }
 
   $scope.removeIdea = function(_id){
-    $http.delete(ApiEndpoint.api_url+"/ideas/"+_id);
+    $http.delete(ApiEndpoint.api_url+"/ideas/"+_id)
+    .success(function(data){
+      //$scope.idea.images.push("http://localhost:9000"+data.path);
+      toaster.pop({
+        type: 'success',
+        title: 'OK',
+        body: 'Idea가 삭제되었습니다.',
+        timeout:5000,
+        showCloseButton: true
+      });
 
-    toaster.pop({
-      type: 'success',
-      title: 'OK',
-      body: 'Idea가 삭제되었습니다.',
-      timeout:5000,
-      showCloseButton: true
+    })
+    .error(function(err){
+      console.log(err);
     });
+
+
   }
 
   var createIdeaWithFile = function(){
@@ -579,29 +596,40 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('IdeaDetailCtrl',function($rootScope,$scope, $state, $ionicPopup,$stateParams,$http, Ideas,Replies, Auth, socket,ApiEndpoint,toaster){
+.controller('IdeaDetailCtrl',function($rootScope,$scope, $state, $ionicPopup,$stateParams,$http,$ionicModal, Ideas,Replies, Auth, socket,ApiEndpoint,toaster){
   //$scope.content = Ideas.getOne($stateParams.ideaId);
 
   console.log(Auth.getCurrentUser()._id);
+  var userId = Auth.getCurrentUser()._id;
   $scope.noMoreItemsAvailable = true;
   $scope.content = {};
   $scope.removed = false;
   $scope.mine = false;
+  $scope.idea = {};
+
+  var isThisMine = function(){
+    if(userId){
+      if($scope.content._creator._id==userId){
+        $scope.content.mine = true;
+      }else{
+        $scope.content.mine = false;
+      }
+    }else{
+      setTimeout(function(){
+        console.log("is this mine timeout");
+        isThisMine();
+      },1000)
+    }
+  }
   Ideas.getOne({
     id: $stateParams.ideaId
   })
   .then( function(data) {
     // Logged in, redirect to home
 
-
-    if(data._creator._id==Auth.getCurrentUser()._id){
-      data.mine = true;
-      $scope.mine = true;
-    }else{
-      data.mine = false;
-
-    }
     $scope.content = data;
+    isThisMine();
+
 
 
     data.liker.forEach(function(val) {
@@ -639,7 +667,89 @@ angular.module('starter.controllers', [])
     .error(function(err){
       console.log(err);
     });
+  };
+
+  $ionicModal.fromTemplateUrl('update-idea.html', {
+    scope: $scope,
+    animation: 'slide-in-up',
+    focusFirstInput: true
+  }).then(function(modal) {
+    $scope.updateIdeaModal = modal;
+  });
+
+  $scope.openUpdateIdeaModal = function(content) {
+    console.log(content);
+    $scope.idea = content;
+    $scope.updateIdeaModal.show();
+  };
+  $scope.closeUpdateIdeaModal = function() {
+
+    $scope.updateIdeaModal.hide();
+  };
+
+  $scope.updateIdea = function(){
+    var mergedTags =[];
+
+    if($scope.idea.body==''){
+      $scope.somePlaceholder="꼭 적어주셔야 해요.";
+      return;
+    }
+
+    if($scope.idea.bg==''){
+      $scope.idea.bg="1";
+    }
+
+    angular.forEach($scope.idea.tags, function(value, key) {
+      this.push(value.text);
+    }, mergedTags);
+
+    if($scope.idea.images.length<1){
+      $scope.idea._creator = Auth.getCurrentUser()._id;
+      if($scope.idea === '') {
+        return;
+      }
+
+      var params = {bg:$scope.idea.bg
+                  , body:$scope.idea.body
+                  , detail:$scope.idea.detail
+                  , tags:mergedTags};
+
+      $http.put(ApiEndpoint.api_url+"/ideas/"+$scope.idea._id,params)
+      .success(function(data){
+
+        $scope.content = data;
+        isThisMine();
+
+        toaster.pop({
+          type: 'success',
+          title: 'OK',
+          body: 'Idea가 수정되었습니다.',
+          timeout:5000,
+          showCloseButton: true
+        });
+        $scope.closeUpdateIdeaModal();
+        $scope.idea = {body:"",images:[],tags:[]};
+      })
+      .error(function(err){
+        console.log(err);
+      });
+
+    }else{
+      //createIdeaWithFile();
+    }
   }
+
+  $scope.selectBg = function(bg){
+    $scope.idea.bg = bg;
+  }
+
+  $scope.selectedBg = function(bg){
+    if($scope.idea.bg == bg){
+      return 'bg-selected';
+    }
+  }
+
+
 
   $scope.reply = {_idea:$stateParams.ideaId
                   ,_creator:Auth.getCurrentUser()._id};

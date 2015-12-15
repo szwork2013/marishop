@@ -46,7 +46,6 @@ angular.module('starter.services', [])
 
       $http.get(ApiEndpoint.api_url+"/ideas/"+idea.id)
       .success(function(data){
-        console.log(data);
         deferred.resolve(data);
         return cb();
       })
