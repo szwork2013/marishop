@@ -39,6 +39,25 @@ angular.module('starter.services', [])
       return deferred.promise;
     },
 
+    getRefreshList : function(pagination, callback){
+      var cb = callback || angular.noop;
+      var deferred = $q.defer();
+
+      var first_id = pagination.first_id;
+
+      $http.get(ApiEndpoint.api_url+"/ideas",{params:{first_id:first_id,refresh:true}})
+      .success(function(data){
+        deferred.resolve(data);
+        return cb();
+      })
+      .error(function(err){
+        deferred.reject(err);
+        return cb(err);
+      }.bind(this));
+
+      return deferred.promise;
+    },
+
 
     getOne: function(idea, callback) {
       var cb = callback || angular.noop;

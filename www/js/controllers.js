@@ -508,6 +508,7 @@ angular.module('starter.controllers', [])
           timeout:5000,
           showCloseButton: true
         });
+        $scope.doRefresh();
         $scope.closeCreateIdeaModal();
 
       })
@@ -589,6 +590,42 @@ angular.module('starter.controllers', [])
     });
 
   }
+
+  $scope.doRefresh = function() {
+
+    console.log($scope.contents[0]);
+    Ideas.getRefreshList({
+      first_id: $scope.contents[0]._id
+    })
+    .then( function(data) {
+      // Logged in, redirect to home
+      console.log(data);
+      //angular.extend($scope.contents,data);
+
+      for(var i in data){
+        if(data[i]._creator._id==Auth.getCurrentUser()._id){
+          data[i].mine = true;
+        }else{
+          data[i].mine = false;
+
+        }
+        data[i].liker.forEach(function(val) {
+
+          if (val == Auth.getCurrentUser()._id) {
+            data[i].ilike = true;
+          }
+        })
+        $scope.contents.unshift(data[i]);
+      }
+    })
+    .catch( function(err) {
+      $scope.errors.other = err.message;
+    });
+
+    $scope.$broadcast('scroll.refreshComplete');
+    $scope.$apply()
+  };
+
 
   $scope.$on('$destroy', function () {
     socket.unsyncUpdates('idea');

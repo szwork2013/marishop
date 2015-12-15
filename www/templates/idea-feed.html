@@ -5,7 +5,8 @@
         <button class="button button-icon icon ion-ios-plus-empty" ng-click="openCreateIdeaModal()"></button>
     </ion-nav-buttons>
 	<ion-content   class="background">
-
+		<ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
+		</ion-refresher>
 
 		<div ng-repeat="content in contents">
 			<div class="card card-background" style="box-shadow: none;">

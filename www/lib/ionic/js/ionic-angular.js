@@ -6737,7 +6737,7 @@ IonicModule
         scrollChild;
 
     if (!isDefined($attrs.pullingIcon)) {
-      $attrs.$set('pullingIcon', 'ion-android-arrow-down');
+      $attrs.$set('pullingIcon', 'ion-arrow-down-c');
     }
 
     $scope.showSpinner = !isDefined($attrs.refreshingIcon) && $attrs.spinner != 'none';

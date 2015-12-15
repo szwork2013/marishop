@@ -240,9 +240,9 @@ input[type="tel"], input[type="color"] {
 
 
     font-size:20px;
-    width:300px;
+    /*width:300px;*/
 
-    margin : 40px 20px 0 20px;
+    margin : 77px 20px 0 20px;
     text-align:center;
 }
 .card .category {

@@ -45,7 +45,7 @@
             },
             'body-output-type': '', // Options: '', 'trustedHtml', 'template', 'templateWithData', 'directive'
             'body-template': 'toasterBodyTmpl.html',
-            'icon-class': 'toast-info',
+            'icon-class': 'toast-success',
             'position-class': 'toast-top-right', // Options (see CSS):
             // 'toast-top-full-width', 'toast-bottom-full-width', 'toast-center',
             // 'toast-top-left', 'toast-top-center', 'toast-top-right',
