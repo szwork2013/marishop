@@ -7,6 +7,17 @@ angular.module('starter')
     // socket.io now auto-configures its connection when we ommit a connection url
 
     var ioSocket,socket;
+
+    ioSocket = io(ApiEndpoint.cdn_url, {
+      // Send auth token on connection, you will need to DI the Auth service above
+      // 'query': 'token=' + Auth.getToken()
+      path: '/socket.io-client'
+    });
+
+    socket = socketFactory({
+      ioSocket: ioSocket
+    });
+
     var initSocket = function(){
       if(window.io=== undefined){
         ioSocket = io(ApiEndpoint.cdn_url, {
@@ -25,7 +36,7 @@ angular.module('starter')
       }
     }
 
-    initSocket();
+    //initSocket();
 
 
     return {
