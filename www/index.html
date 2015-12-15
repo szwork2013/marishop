@@ -46,16 +46,13 @@
 
 	  <script>
 		  var my_awesome_script = document.createElement('script');
-		  var my_awesome_script2 = document.createElement('script');
 		  if(document.location.hostname.indexOf('localhost')>-1){
 			  my_awesome_script.setAttribute('src','http://marishopserver-gsopenlab.rhcloud.com:8000/socket.io-client/socket.io.js');
 		  }else{
 			  my_awesome_script.setAttribute('src','http://marishopserver-gsopenlab.rhcloud.com/app/88308d47.vendor.js');
 		  }
-		  my_awesome_script2.setAttribute('src','js/socket/socket.service.js');
 
 		  document.head.appendChild(my_awesome_script);
-		  document.head.appendChild(my_awesome_script2);
 	  </script>
 	  <!--<script src="http://marishopserver-gsopenlab.rhcloud.com/app/88308d47.vendor.js"></script>-->
 	  <!--<script src="http://marishopserver-gsopenlab.rhcloud.com:8000/socket.io-client/socket.io.js"></script>-->
@@ -66,7 +63,7 @@
     <script src="js/services.js"></script>
     <script src="js/auth/auth.service.js"></script>
     <script src="js/auth/user.service.js"></script>
-	  <!--<script src="js/socket/socket.service.js"></script>-->
+	  <script src="js/socket/socket.service.js"></script>
 
 	  <script src="lib/directive/readmore.js"></script>
 	  <script src="lib/directive/ng-tags-input.js"></script>
