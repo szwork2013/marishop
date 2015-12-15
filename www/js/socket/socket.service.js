@@ -8,7 +8,7 @@ angular.module('starter')
 
     var ioSocket,socket;
     var initSocket = function(){
-      if(io){
+      if(window.io=== undefined){
         ioSocket = io(ApiEndpoint.cdn_url, {
           // Send auth token on connection, you will need to DI the Auth service above
           // 'query': 'token=' + Auth.getToken()
