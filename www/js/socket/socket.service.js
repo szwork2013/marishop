@@ -5,6 +5,8 @@ angular.module('starter')
   .factory('socket', function(socketFactory,ApiEndpoint,$rootScope,Auth) {
 
     // socket.io now auto-configures its connection when we ommit a connection url
+
+  
     var ioSocket = io(ApiEndpoint.cdn_url, {
       // Send auth token on connection, you will need to DI the Auth service above
       // 'query': 'token=' + Auth.getToken()
