@@ -29,7 +29,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
     $rootScope.toasterPop = function(param){
       toaster.pop(param);
     }
-    $rootScope.bgs = ["1","2","3","4","5","6","7","8","9","10","11","12"];
+    $rootScope.bgs = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"];
 
 
   });

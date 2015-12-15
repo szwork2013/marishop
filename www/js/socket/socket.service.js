@@ -49,7 +49,7 @@ angular.module('starter')
             if(item._creator._id==Auth.getCurrentUser()._id) {
               item.mine = true;
             }
-            array.unshift(item);
+            //array.unshift(item);
           }
 
           cb(event, item, array);
