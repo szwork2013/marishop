@@ -253,4 +253,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
       })
     },
   }
-});;
+})
+.directive('recomment', function() {
+  return {
+    link: function(scope, element, attrs) {
+      scope.clicked = function () {
+
+        if(element.hasClass('clicked')){
+          element.parent().next().next().next().addClass('recomment-hide')
+          element.parent().next().next().next().removeClass('recomment-show')
+          element.removeClass('clicked');
+        }else{
+          element.parent().next().next().next().addClass('recomment-show')
+          element.parent().next().next().next().removeClass('recomment-hide')
+          element.addClass('clicked');
+        }
+
+
+
+      }
+    }
+  }
+})
+;

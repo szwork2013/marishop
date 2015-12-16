@@ -121,11 +121,23 @@ angular.module('starter')
           // otherwise just add item to the collection
           if (oldItem) {
             array.splice(index, 1, item);
-            content.comment -=1;
             event = 'updated';
           } else {
             array.push(item);
             content.comment +=1;
+          }
+
+        });
+
+        socket.on('reply:remove', function (item) {
+          var oldItem = _.find(array, {_id: item._id});
+          var index = array.indexOf(oldItem);
+
+          // replace oldItem if it exists
+          // otherwise just add item to the collection
+          if (oldItem) {
+            array.splice(index, 1);
+            content.comment -=1;
           }
 
         });
@@ -138,12 +150,24 @@ angular.module('starter')
           removeCb(data);
         })
 
+        socket.on("reply:like",function(data){
+          var oldItem = _.find(array, {_id: data._id});
+          var index = array.indexOf(oldItem);
+          array[index].like = data.like;
+        });
+
       }
       ,emitCommentCreate : function(info){
         socket.emit("reply:save",info);
       }
+      ,emitCommentRemove : function(info){
+        socket.emit("reply:remove",info);
+      }
       ,emitLike : function(_liker){
         socket.emit("idea:like",_liker);
+      }
+      ,emitReplyLike : function(_liker){
+        socket.emit("reply:like",_liker);
       }
       ,emitRemove : function(_idea){
         socket.emit("idea:remove",_idea);

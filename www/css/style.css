@@ -362,7 +362,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
     margin: 30px 0 15px;
 }
 a {
-    color: #428bca;
+    color: #FF6263;
     text-decoration: none;
 }
 
@@ -640,3 +640,13 @@ textarea { width: 100%; margin: 0; padding: 0; border-width: 0; }
     border-width: 9px;
 }
 
+.recomment-show{
+    display: block;
+}
+.recomment-hide{
+    display: none;
+}
+.recomment{
+    background-color: rgba(255, 211, 207, 0.29);
+    padding:2px 2px 2px 9px;;
+}

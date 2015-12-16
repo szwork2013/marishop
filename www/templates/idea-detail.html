@@ -71,24 +71,37 @@
 				</button>
 				<label class="item-input-wrapper white-bg" style="border: 1px solid #F45D4C;">
 
-					<input type="search" placeholder="댓글달기" ng-model="reply.comment" ng-enter="createReply()" class="ng-pristine ng-untouched ng-valid">
+					<input type="text" placeholder="댓글달기" ng-model="reply.comment" ng-enter="createReply()" class="ng-pristine ng-untouched ng-valid">
 
 				</label>
 				<button style="border: 1px solid #F45D4C;color:#F45D4C" class="button button-outline button-light" ng-click="createReply()">
 					등록
 				</button>
 			</div>
-
 			<ion-list >
 				<ion-item  class="reply" ng-repeat="reply in replies track by $index">
-					<h2 style="display: inline-block;font-size: 13px;">{{reply._creator.name}} </h2>
+					<div  ng-click="infoApp(reply)">
+						<h2 style="display: inline-block;font-size: 15px;">{{reply._creator.name}} </h2>
+						<p class="description" style="font-size:13px;">{{reply.comment}}</p>
+					</div>
+					<!--<span  ng-if="isThisMyReply(reply._creator._id)" style="font-size: 12px;"><a ng-click="removeReply(reply._id,reply._idea);"><i class="icon ion-trash-a"></i> 댓글삭제</a></span>-->
+					<span style="font-size: 12px;"><a ng-click="replyLike(reply._id)" ><i class="icon ion-ios-heart"></i> 좋아요</a> {{reply.like}}</span>
+					<span style="font-size: 12px;"><a ng-click="clicked()" recomment><i class="icon ion-chatboxes"></i>  댓글달기</a></span>
+					<span style="font-size: 12px;"><i class="icon ion-ios-clock-outline"></i>  {{reply.date|timeAgo}}</span>
+					<ion-list>
+						<ion-item class="recomment" ng-repeat="comm in reply.recomment track by $index">
+							<h2 style="display: inline-block;font-size: 13px;">{{comm.recommenter_name}} </h2>
+							<span style="font-size: 11px;"><i class="icon ion-ios-clock-outline"></i>  {{comm.date|timeAgo}}</span>
+							<p class="description" style="font-size:13px;"  >{{comm.recomment}}</p>
+							<span  ng-if="isThisMyReply(comm.recommenter)" style="font-size: 12px;"><a ng-click="removeRecomment(reply._id,comm._id);"><i class="icon ion-trash-a"></i> 댓글삭제</a></span>
 
+						</ion-item>
+					</ion-list>
 
-					<p class="description" style="font-size:13px;" read-more ng-model="reply.comment" words="false" length="45"></p>
+					<label class="item-input-wrapper white-bg recomment-hide" style="border: 1px solid #F45D4C;height: 22px;">
+						<input type="text" placeholder="댓글달기" ng-model="reply.recommentTxt" ng-enter="createRecomment(reply)" class="ng-pristine ng-untouched ng-valid" style="height:20px;">
+					</label>
 					<!-- *class icon-view / show icon check -->
-
-					<span style="font-size: 11px;"><i class="icon ion-ios-clock-outline"></i>  {{reply.date|timeAgo}}</span>
-
 				</ion-item>
 			</ion-list>
 			<ion-infinite-scroll ng-if="!noMoreItemsAvailable" on-infinite="loadMore()" distance="10%">

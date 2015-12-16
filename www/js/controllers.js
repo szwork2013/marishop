@@ -698,7 +698,6 @@ angular.module('starter.controllers', [])
     $state.go("app.idea");
   }
   $scope.removeIdea = function(_id){
-    socket.emitRemove(_id);
 
     $http.delete(ApiEndpoint.api_url+"/ideas/"+_id)
     .success(function(data){
@@ -877,6 +876,136 @@ angular.module('starter.controllers', [])
     socket.unsyncUpdates('idea');
     socket.unsyncUpdates('reply');
   });
+
+  $scope.createRecomment = function(reply){
+    console.log(reply);
+
+    $http.post(ApiEndpoint.api_url+"/replies/recomment/"+reply._id, {recomment:reply.recommentTxt})
+    .success(function(data){
+      reply.recommentTxt="";
+      socket.emitCommentCreate({_id:data._id,_idea:data._idea});
+
+    })
+    .error(function(err){
+      console.log(err);
+    });
+  }
+
+  $scope.isThisMyReply = function(creator){
+    if(creator==userId) return true;
+    else return false;
+  }
+
+  $scope.replyLike = function(_id){
+    socket.emitReplyLike({_liker:Auth.getCurrentUser()._id,_id:_id, _idea:$stateParams.ideaId});
+  };
+
+  $scope.removeReply = function(_id,_idea){
+    console.log(_idea);
+    $http.delete(ApiEndpoint.api_url+"/replies/"+_id+"?_idea="+_idea)
+    .success(function(data){
+      console.log(data);
+      toaster.pop({
+        type: 'success',
+        title: 'OK',
+        body: '댓글이 삭제되었습니다.',
+        timeout:2000,
+        showCloseButton: true
+      });
+
+      socket.emitCommentRemove({_id:data._id,_idea:data._idea});
+    })
+    .error(function(err){
+      console.log(err);
+    });
+  };
+
+  $scope.editReply = {};
+  $scope.infoApp = function(data) {
+    console.log(data);
+    $scope.editReply.comment = data.comment;
+
+    var buttons = [ { text: '취소' },
+                    {
+                      text: '<b>삭제</b>',
+                      type: 'button-positive',
+                      onTap: function(e) {
+                        return 'remove';
+                      }
+                    },
+                    {
+                      text: '<b>저장</b>',
+                      type: 'button-positive',
+                      onTap: function(e) {
+                        return 'edit';
+                      }
+                    }];
+    if(data._creator._id==Auth.getCurrentUser()._id){
+      var myPopup = $ionicPopup.show({
+        template: '<input type="text" ng-model="editReply.comment">',
+        title: '댓글 수정',
+        subTitle: '수정할 댓글 내용을 입력하세요.',
+        scope: $scope,
+        buttons: buttons
+      });
+      myPopup.then(function(res) {
+        console.log('Tapped!', res);
+
+        if(res=='remove'){
+          $scope.removeReply(data._id, data._idea)
+        }else if(res=='edit'){
+          $scope.updateReply({comment:$scope.editReply.comment,_id:data._id})
+        }
+
+      });
+    }
+
+  };
+
+
+  $scope.updateReply = function(data){
+    var params = {comment:data.comment};
+
+    $http.put(ApiEndpoint.api_url+"/replies/"+data._id,params)
+    .success(function(data){
+      toaster.pop({
+        type: 'success',
+        title: 'OK',
+        body: '댓글이 수정되었습니다.',
+        timeout:2000,
+        showCloseButton: true
+      });
+      socket.emitCommentCreate({_id:data._id,_idea:data._idea});
+
+
+    })
+    .error(function(err){
+      console.log(err);
+    });
+  }
+
+  $scope.removeRecomment = function(_id,_recomment){
+
+    $http.delete(ApiEndpoint.api_url+"/replies/recomment/"+_id+"?_recomment="+_recomment)
+    .success(function(data){
+      console.log(data);
+      toaster.pop({
+        type: 'success',
+        title: 'OK',
+        body: '댓글이 삭제되었습니다.',
+        timeout:2000,
+        showCloseButton: true
+      });
+
+
+      socket.emitCommentCreate({_id:data._id,_idea:data._idea});
+    })
+    .error(function(err){
+      console.log(err);
+    });
+
+
+  }
 
 })
 ;
