@@ -90,6 +90,7 @@ angular.module('starter')
           var event = 'deleted';
           _.remove(array, {_id: item._id});
           cb(event, item, array);
+          console.log(modelName+":remove",item);
         });
       },
 
@@ -147,6 +148,7 @@ angular.module('starter')
         });
 
         socket.on("idea:remove",function(data){
+          console.log("idea:remove",data);
           removeCb(data);
         })
 
