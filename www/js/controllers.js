@@ -218,7 +218,21 @@ angular.module('starter.controllers', [])
 
 
   $scope.contents =[];
-  socket.syncUpdates('idea', $scope.contents);
+
+
+  var setSocket = function(){
+    console.log("setting socket");
+    if(socket.socketReady){
+      socket.syncUpdates('idea', $scope.contents);
+    }else{
+      setTimeout(function(){
+        setSocket();
+      },100)
+    }
+  };
+
+  setSocket();
+
 
   var getPageList = function(cb){
     Ideas.getPageList({
@@ -294,7 +308,7 @@ angular.module('starter.controllers', [])
 
 
     getPageList(function(){
-      socket.syncUpdates('idea', $scope.contents);
+      //socket.syncUpdates('idea', $scope.contents);
       $scope.$broadcast('scroll.infiniteScrollComplete');
     });
 

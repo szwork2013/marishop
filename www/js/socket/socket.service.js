@@ -7,19 +7,21 @@ angular.module('starter')
     // socket.io now auto-configures its connection when we ommit a connection url
 
     var ioSocket,socket;
+    var socketReady = false;
 
-    ioSocket = io(ApiEndpoint.cdn_url, {
-      // Send auth token on connection, you will need to DI the Auth service above
-      // 'query': 'token=' + Auth.getToken()
-      path: '/socket.io-client'
-    });
-
-    socket = socketFactory({
-      ioSocket: ioSocket
-    });
+    //ioSocket = io(ApiEndpoint.cdn_url, {
+    //  // Send auth token on connection, you will need to DI the Auth service above
+    //  // 'query': 'token=' + Auth.getToken()
+    //  path: '/socket.io-client'
+    //});
+    //
+    //socket = socketFactory({
+    //  ioSocket: ioSocket
+    //});
 
     var initSocket = function(){
-      if(window.io=== undefined){
+      console.log("init socket");
+      if(window.io!== undefined){
         ioSocket = io(ApiEndpoint.cdn_url, {
           // Send auth token on connection, you will need to DI the Auth service above
           // 'query': 'token=' + Auth.getToken()
@@ -29,6 +31,7 @@ angular.module('starter')
         socket = socketFactory({
           ioSocket: ioSocket
         });
+        socketReady = true;
       }else{
         setTimeout(function(){
           initSocket();
@@ -36,11 +39,12 @@ angular.module('starter')
       }
     }
 
-    //initSocket();
+    initSocket();
 
 
     return {
       socket: socket,
+      socketReady : socketReady,
 
       /**
        * Register listeners to sync an array with updates on a model
