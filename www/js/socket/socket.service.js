@@ -88,6 +88,7 @@ angular.module('starter')
          */
         socket.on(modelName + ':remove', function (item) {
           var event = 'deleted';
+          console.log(array);
           _.remove(array, {_id: item._id});
           cb(event, item, array);
           console.log(modelName+":remove",item);

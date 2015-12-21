@@ -44,8 +44,9 @@ angular.module('starter.services', [])
       var deferred = $q.defer();
 
       var first_id = pagination.first_id;
+      var last_id = pagination.last_id;
 
-      $http.get(ApiEndpoint.api_url+"/ideas",{params:{first_id:first_id,refresh:true}})
+      $http.get(ApiEndpoint.api_url+"/ideas",{params:{first_id:first_id,last_id:last_id,refresh:true}})
       .success(function(data){
         deferred.resolve(data);
         return cb();

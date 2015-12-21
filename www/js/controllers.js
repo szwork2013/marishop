@@ -314,20 +314,6 @@ angular.module('starter.controllers', [])
 
   };
 
-  var getNextPage = function(){
-    $scope.countPerPage = 2;
-    $scope.page++;
-
-    if($scope.totalCount>=($scope.page+1)*$scope.countPerPage){
-      var item = Ideas.getPageList($scope.page,$scope.countPerPage );
-    }else{
-      var item = {};
-      $scope.noMoreItemsAvailable = true;
-    }
-    return item;
-
-  }
-
   $ionicModal.fromTemplateUrl('create-idea.html', {
     scope: $scope,
     animation: 'slide-in-up',
@@ -607,14 +593,16 @@ angular.module('starter.controllers', [])
 
   $scope.doRefresh = function() {
 
-    console.log($scope.contents[0]);
+    console.log($scope.contents[$scope.contents.length-1]);
     Ideas.getRefreshList({
       first_id: $scope.contents[0]._id
+      ,last_id: $scope.contents[$scope.contents.length-1]._id
     })
     .then( function(data) {
       // Logged in, redirect to home
       console.log(data);
       //angular.extend($scope.contents,data);
+      $scope.contents =[];
 
       for(var i in data){
         if(data[i]._creator._id==Auth.getCurrentUser()._id){
@@ -629,8 +617,12 @@ angular.module('starter.controllers', [])
             data[i].ilike = true;
           }
         })
-        $scope.contents.unshift(data[i]);
+        $scope.contents.push(data[i]);
       }
+      socket.syncUpdates('idea', $scope.contents);
+
+
+
     })
     .catch( function(err) {
       $scope.errors.other = err.message;
@@ -986,7 +978,7 @@ angular.module('starter.controllers', [])
 
   $scope.removeRecomment = function(_id,_recomment){
 
-    $http.delete(ApiEndpoint.api_url+"/replies/recomment/"+_id+"?_recomment="+_recomment)
+    $http.delete(piEndpoint.api_url+"/replies/recomment/"+_id+"?_recomment="+_recomment)
     .success(function(data){
       console.log(data);
       toaster.pop({

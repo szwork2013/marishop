@@ -264,8 +264,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
           element.parent().next().next().next().removeClass('recomment-show')
           element.removeClass('clicked');
         }else{
-          element.parent().next().next().next().addClass('recomment-show')
-          element.parent().next().next().next().removeClass('recomment-hide')
+          element.parent().next().next().next().addClass('recomment-show');
+          console.log(element.parent().next().next().next().children()[0]);
+          element.parent().next().next().next().children()[0].focus();
+          element.parent().next().next().next().removeClass('recomment-hide');
           element.addClass('clicked');
         }
 
