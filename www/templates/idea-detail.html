@@ -36,7 +36,7 @@
 			</div>
 			<!--<div class="item item-body" ng-style="{'background-image':'url(img/bg/{{content.bg!=''?content.bg:1}}.jpg)'}"-->
 			     <!--style=" background-size: cover; background-position: 50% 50%;">-->
-				<div class="item item-body" style="background-image: url(img/bg/{{content.bg!=null?content.bg:1}}.jpg); background-size: cover; background-position: 50% 50%;">
+				<div class="item item-body" style="background-image: url(img/bg/{{(content.bg!=null&&content.bg!='undefined')?content.bg:1}}.jpg); background-size: cover; background-position: 50% 50%;">
 
 				<div class="card-detail-dark">
 				</div>
@@ -60,7 +60,8 @@
 			</div>
 
 			<div ng-if="content.images.length>0" ng-repeat="image in content.images" class="item item-image">
-				<img ng-src="{{cdn_url+image}}">
+				<img ng-src="{{image.path}}">
+				<!--<img ng-src="{{cdn_url+image}}">-->
 
 			</div>
 			<div class="bar bar-header item-input-inset" style="background-color: white;">
@@ -146,29 +147,18 @@
 							<div class="list">
 								<div class="select-bg-img" ng-class="selectedBg(bg)" ng-click="selectBg(bg);" ng-repeat="bg in bgs">
 									<img ng-src="img/bg/{{bg}}.jpg">
+
 								</div>
 							</div>
 
-							<!--<div ng-show="!device" class="row">-->
-							<!--<div class="col">-->
-							<!--<input type="file" ngf-select="imagePreview($files)">-->
-							<!--</div>-->
-							<!--</div>-->
-							<!--<div ng-show="device" class="row">-->
-							<!--<div class="col">-->
-							<!--<button class="button  button-assertive" style="width: 100%;" ng-click="getMultiPhoto()"><i class="ion-images"></i> Album</button>-->
+							<div class="row" >
+								<div ng-if="idea.images.length>0" ng-repeat="image in idea.images" class="col img-wrap">
+									<span class="close" ng-click="removePhoto(image)">&times;</span>
+									<img ng-src="{{image.path}}"width="100%">
+								</div>
 
-							<!--</div>-->
-							<!--<div class="col">-->
-							<!--<button class="button button-outline button-assertive" style="width: 100%;" ng-click="takePhoto()"><i class="ion-camera"></i> Camera</button>-->
-							<!--</div>-->
-							<!--</div>-->
-							<!--<div class="row" >-->
-							<!--<div class="col" ng-repeat="img in idea.images">-->
-							<!--<img ng-src="{{img}}" width="100%"/>-->
-							<!--</div>-->
+							</div>
 
-							<!--</div>-->
 
 						</div>
 					</div>

@@ -200,14 +200,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
 .run(function ($rootScope, $location, Auth) {
   // Redirect to login if route requires auth and you're not logged in
   $rootScope.$on('$stateChangeStart', function (event, next) {
+    console.log(next);
+    if(next.url.indexOf('signup')<0){
+      Auth.refreshToken({})
+      .then( function() {
+        // Logged in, redirect to home
+        //$location.path('/');
+      })
+      .catch( function(err) {
+      });
+    }
 
-    Auth.refreshToken({})
-    .then( function() {
-      // Logged in, redirect to home
-      //$location.path('/');
-    })
-    .catch( function(err) {
-    });
 
     Auth.isLoggedInAsync(function(loggedIn) {
 

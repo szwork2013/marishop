@@ -11,8 +11,19 @@
 		<div ng-repeat="content in contents">
 			<div class="card card-background" style="box-shadow: none;">
 
-				<div class="image" style="background-image: url(img/bg/{{content.bg!=null?content.bg:1}}.jpg); background-size: cover; background-position: 50% 50%;">
+				<div ng-if="content.images.length<1" class="image" style="background-image: url(img/bg/{{(content.bg!=null&&content.bg!='undefined')?content.bg:1}}.jpg); background-size: cover; background-position: 50% 50%;">
 				</div>
+
+
+				<div ng-if="content.images.length>0" class="image" style="background-image: url({{content.images[0].path}}); background-size: cover; background-position: 50% 50%;">
+					<p ng-if="content.images.length>1" class="social-img-down" style="margin-bottom: 125px;">
+						<a  href="#/app/idea-feed/{{content._id}}">
+							<i class="icon ion-plus-round"></i>
+							{{content.images.length-1}}
+						</a>
+					</p>
+				</div>
+
 				<div class="card-mask-dark">
 				</div>
 				<div class="content">
@@ -110,26 +121,31 @@
 								</div>
 							</div>
 
-							<!--<div ng-show="!device" class="row">-->
-								<!--<div class="col">-->
-									<!--<input type="file" ngf-select="imagePreview($files)">-->
-								<!--</div>-->
-							<!--</div>-->
-							<!--<div ng-show="device" class="row">-->
-								<!--<div class="col">-->
-									<!--<button class="button  button-assertive" style="width: 100%;" ng-click="getMultiPhoto()"><i class="ion-images"></i> Album</button>-->
+							<div ng-show="!device" class="row">
+								<div class="col">
 
-								<!--</div>-->
-								<!--<div class="col">-->
-									<!--<button class="button button-outline button-assertive" style="width: 100%;" ng-click="takePhoto()"><i class="ion-camera"></i> Camera</button>-->
-								<!--</div>-->
-							<!--</div>-->
-							<!--<div class="row" >-->
-								<!--<div class="col" ng-repeat="img in idea.images">-->
-									<!--<img ng-src="{{img}}" width="100%"/>-->
-								<!--</div>-->
+									<div class="upload">
+										<i class="ion-images"></i> Album
+										<input type="file" id="file" ngf-select="imagePreview($files)">
 
-							<!--</div>-->
+									</div>
+								</div>
+							</div>
+							<div ng-show="device" class="row">
+								<div class="col">
+									<button class="button  button-assertive" style="width: 100%;" ng-click="getMultiPhoto()"><i class="ion-images"></i> Album</button>
+
+								</div>
+								<div class="col">
+									<button class="button button-outline button-assertive" style="width: 100%;" ng-click="takePhoto()"><i class="ion-camera"></i> Camera</button>
+								</div>
+							</div>
+							<div class="row" >
+								<div class="col" ng-repeat="img in idea.images">
+									<img ng-src="{{img}}" width="100%"/>
+								</div>
+
+							</div>
 
 						</div>
 					</div>

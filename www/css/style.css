@@ -650,3 +650,48 @@ textarea { width: 100%; margin: 0; padding: 0; border-width: 0; }
     background-color: rgba(255, 211, 207, 0.29);
     padding:2px 2px 2px 9px;;
 }
+
+div.upload {
+    /*width: 157px;*/
+    height: 50px;
+    /*background: url(/img/album.png);*/
+    /*overflow: hidden;*/
+    background-color : #FF6263;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+    padding-top: 15px;
+    font-size: 16px;
+
+}
+
+div.upload input {
+    display: block !important;
+    height: 57px !important;
+    width: 100%;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    margin-top:-35px;
+}
+
+.img-wrap {
+    position: relative;
+    display: inline-block;
+    font-size: 0;
+}
+.img-wrap .close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 100;
+    background-color: #FF6263;
+    padding: 10px 9px 18px 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 1;
+    text-align: center;
+    font-size: 35px;
+    line-height: 10px;
+    /*border-radius: 50%;*/
+}

@@ -459,7 +459,6 @@ angular.module('starter.controllers', [])
 
   var uploadImages = [];
   $scope.imagePreview = function($files) {
-
     for (var i = 0; i < $files.length; i++) {
       var file = $files[i];
       var reader = new FileReader();
@@ -508,6 +507,7 @@ angular.module('starter.controllers', [])
           timeout:5000,
           showCloseButton: true
         });
+        $scope.idea = {body:"",images:[],tags:[]};
         $scope.doRefresh();
         $scope.closeCreateIdeaModal();
 
@@ -563,14 +563,7 @@ angular.module('starter.controllers', [])
     fd.append('detail', $scope.idea.detail);
     fd.append('bg', $scope.idea.bg);
     fd.append('_creator', Auth.getCurrentUser()._id);
-
-    var mergedTags =[]
-
-    angular.forEach($scope.idea.tags, function(value, key) {
-      this.push(value.text);
-    }, mergedTags);
-
-    fd.append('tags', mergedTags);
+    fd.append('tags', $scope.idea.tags);
 
     $http.post(ApiEndpoint.api_url+"/ideas/upload", fd, {
       transformRequest: angular.identity,
@@ -580,14 +573,28 @@ angular.module('starter.controllers', [])
     })
     .success(function(data){
       //$scope.idea.images.push("http://localhost:9000"+data.path);
-      toaster.pop('success', "title", "text");
-      $scope.closeCreateIdeaModal();
+
+      toaster.pop({
+        type: 'success',
+        title: 'OK',
+        body: 'Idea가 저장되었습니다.',
+        timeout:5000,
+        showCloseButton: true
+      });
       $scope.idea = {body:"",images:[],tags:[]};
+      $scope.doRefresh();
+      $scope.closeCreateIdeaModal();
+      uploadImages = [];
+      $scope.resetFile();
 
     })
     .error(function(err){
       console.log(err);
     });
+
+  }
+  $scope.resetFile = function(){
+    document.getElementById('file').value=null
 
   }
 
@@ -978,7 +985,7 @@ angular.module('starter.controllers', [])
 
   $scope.removeRecomment = function(_id,_recomment){
 
-    $http.delete(piEndpoint.api_url+"/replies/recomment/"+_id+"?_recomment="+_recomment)
+    $http.delete(ApiEndpoint.api_url+"/replies/recomment/"+_id+"?_recomment="+_recomment)
     .success(function(data){
       console.log(data);
       toaster.pop({
@@ -997,6 +1004,10 @@ angular.module('starter.controllers', [])
     });
 
 
+  }
+
+  $scope.removePhoto = function(image){
+    console.log(image);
   }
 
 })
