@@ -200,7 +200,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
 .run(function ($rootScope, $location, Auth) {
   // Redirect to login if route requires auth and you're not logged in
   $rootScope.$on('$stateChangeStart', function (event, next) {
-    console.log(next);
     if(next.url.indexOf('signup')<0){
       Auth.refreshToken({})
       .then( function() {
